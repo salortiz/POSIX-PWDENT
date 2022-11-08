@@ -8,7 +8,7 @@ This module creates a few dynamic variables for easy access to information in th
 ```raku
 need POSIX::PWDENT; # No "use" required as no exports available.
 
-# To get the UID of user *auser* use `$*PWDENT` variable as an Associative
+# To get the UID of user named 'auser' use $*PWDENT variable as an Associative
 my $uid = +$*PWDENT<auser>;
 
 # Or
@@ -49,7 +49,7 @@ with the following methods to access the corresponding fields of the entry:
 Similar to how Raku´s allomorphs works, evaluating the object in `Str` context returns the
 value of `.name` and in `Numeric` context the value of `.uid`.
 
-So, the fastest way to get get UID of a user named *auser* all you need to do is:
+So, to get the UID of a user named *auser* all you need to do is:
 
 ```raku
 my $uid = +$*PWDENT<auser>; # Or $*PWDENT<auser>.Numeric
@@ -58,13 +58,22 @@ my $uid = +$*PWDENT<auser>; # Or $*PWDENT<auser>.Numeric
 Or to get the user name with UID 123, you can:
 
 ```raku
-my $user = ~$*PWDENT[123]; # Or $*PWDENT[123].Str
+my $uname = ~$*PWDENT[123]; # Or $*PWDENT[123].Str
 ```
 
 Even you can coerce the `PwdEnt` object to `IO` to get the value of `dir` as an `IO::Path`.
 
-Requesting an inexistent entry returns an undefined value. As with other positional or
-associative you can use the `:exists` adverb to check existence.
+Requesting an inexistent entry returns an undefined value. So, you can use `with`
+
+```raku
+with $*PWDENT<apache> {
+   # User 'apache' exists, can access its methods
+   say .gecos;
+   say "Apache dir is {.dir}";
+}
+```
+
+As with other positional or associative you can use the `:exists` adverb to check existence.
 
 ```raku
 say $*PWDENT<root>:exists; # True (root user almost always exists)
@@ -122,5 +131,5 @@ for @*PWDENT {
 
 ## Author
 
-Salvador Ortiz
+Salvador Ortiz <sortiz@cpan.org>
 
