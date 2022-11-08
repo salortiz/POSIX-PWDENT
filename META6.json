@@ -2,7 +2,7 @@
     "perl" : "6.c",
     "name" : "POSIX::PWDENT",
     "version" : "0.0.1",
-    "auth" : "github:salortiz",
+    "auth" : "fez:sortiz",
     "description" : "Access to POSIX password DB via $*PWDENT dynvar",
     "depends" : [ ],
     "build-depends" : [ ],
@@ -14,14 +14,14 @@
     "repo-type" : "git",
     "source-url": "git://github.com/salortiz/POSIX-PWDENT.git",
     "authors" : [
-	"Salvador Ortiz <sortiz@cpan.com>"
+	"Salvador Ortiz <sortiz@cpan.org>"
     ],
     "licence" : "Artistic-2.0",
     "support" : {
-       "email" : "sog@msg.mx",
+       "email" : "sortiz@cpan.org",
        "source" : "https://github.com/salortiz/POSIX-PWDENT.git"
     },
     "tags" : [
-       "password", "pwddb", "getpwent", "getpwname", "getpwuid"
+       "passwd", "pwddb", "getpwent", "getpwname", "getpwuid"
     ]
 }
