@@ -1,7 +1,7 @@
 use v6;
 use NativeCall;
 
-class PwdEnt:ver<0.0.1>:auth<github:salortiz> is repr('CStruct') { ... }
+class PwdEnt:ver<0.0.1>:auth<zef:sortiz> is repr('CStruct') { ... }
 sub getpwnam(Str:D $name --> PwdEnt) is native { * };
 sub getpwuid(int32 $uid --> PwdEnt) is native { * };
 sub getpwent(--> PwdEnt) is native(Str) { * };
@@ -33,7 +33,7 @@ class PwdEnt {
     method Hash(PwdEnt:D: --> Hash) { % = |self.List }
 }
 
-class POSIX::PwdEntAcc does Iterable does Positional does Associative {
+class POSIX::PwdEntAcc:ver<0.0.1>:auth<zef:sortiz> does Iterable does Positional does Associative {
     method of() { PwdEnt }
     multi method AT-POS(Int:D $uid) {
 	PwdEnt.byuid($uid);

@@ -2,7 +2,7 @@
     "perl" : "6.c",
     "name" : "POSIX::PWDENT",
     "version" : "0.0.1",
-    "auth" : "fez:sortiz",
+    "auth" : "zef:sortiz",
     "description" : "Access to POSIX password DB via $*PWDENT dynvar",
     "depends" : [ ],
     "build-depends" : [ ],

@@ -1,7 +1,7 @@
 use v6;
 use NativeCall;
 
-class GrpEnt:ver<0.0.1>:auth<github:salortiz> is repr('CStruct') { ... }
+class GrpEnt:ver<0.0.1>:auth<zef:sortiz> is repr('CStruct') { ... }
 sub getgrnam(Str:D $name --> GrpEnt) is native { * };
 sub getgrgid(int32 $uid --> GrpEnt) is native { * };
 sub getgrent(--> GrpEnt) is native(Str) { * };
@@ -29,7 +29,8 @@ class GrpEnt {
     method Hash(GrpEnt:D: --> Hash) { % = |self.List }
 }
 
-class POSIX::GrpEntAcc does Iterable does Positional does Associative {
+class POSIX::GrpEntAcc:ver<0.0.1>:auth<zef:sortiz>
+does Iterable does Positional does Associative {
     method of() { GrpEnt }
     multi method AT-POS(Int:D $uid) {
 	GrpEnt.byuid($uid);
