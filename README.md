@@ -1,5 +1,4 @@
 # POSIX::PWDENT
-<center><h2>Prerelease</h2></center>
 
 This module creates a few dynamic variables for easy access to information in the
 `/etc/passwd` and `/etc/group` files in POSIX systems.
@@ -23,6 +22,11 @@ say ~$*PWDENT[0];
 
 say $*PWDENT[0].name;
 ```
+
+## Prerelease
+
+This module isn't published yet, you can install it by download a zip or `git clone`.
+Your comments and feedback are more than welcome!
 
 ## Reference
 
