@@ -11,14 +11,14 @@ To query data in `/etc/passwd` use the $*PWDENT variable:
 need POSIX::PWDENT; # No "use" required as no exports available.
 
 # To get the UID of user named 'auser' use $*PWDENT variable as an Associative
-my $uid = +$*PWDENT<auser>;
-# Or
 my $uid = $*PWDENT<auser>.uid;
-
-# To get tha name of the user with UID zero use the variable as Positional
-say ~$*PWDENT[0];
 # Or
+my $uid = +$*PWDENT<auser>;
+
+# To get the name of the user with UID zero use the variable as a Positional
 say $*PWDENT[0].name;
+# Or
+say ~$*PWDENT[0];
 ```
 
 To query data in `/etc/group` use the $*GRPENT variable
@@ -27,21 +27,16 @@ To query data in `/etc/group` use the $*GRPENT variable
 need POSIX::GRPENT; # No "use" required as no exports available.
 
 # To get the GID of a gruop named 'agroup' use $*GRPENT variable as an Associative
-my $gid = +$*PWDENT<agroup>;
-# Or
 my $gid = $*PWDENT<auser>.gid;
-
-# To get the name of the group with GID zero use the variable as Positional
-say ~$*GRPENT[0];
 # Or
+my $gid = +$*PWDENT<agroup>;
+
+# To get the name of the group with GID zero use the variable as a Positional
 say $*GRPENT[0].name;
+# Or
+say ~$*GRPENT[0];
 
 ```
-
-## Prerelease
-
-This module isn't published yet, you can install it by download a zip or `git clone`.
-Your comments and feedback are more than welcome!
 
 ## Reference
 ### The $*PWDENT dynamic variable
@@ -67,19 +62,19 @@ with the following methods to access the corresponding fields of the entry:
 - **expire**    Int     Valid only in BSD and Darwin, 0 otherwise
 - **fields**    Int     Valid only in BSD and Darwin, 0 otherwise
 
-Similar to how Raku´s allomorphs works, evaluating the object in `Str` context returns the
+Similar to how Raku´s allomorphs works, evaluating a `PwdEnt` object in `Str` context returns the
 value of `.name` and in `Numeric` context the value of `.uid`.
 
-So, to get the UID of a user named *auser* all you need to do is:
-
-```raku
-my $uid = +$*PWDENT<auser>; # Or $*PWDENT<auser>.Numeric
-```
-
-Or to get the user name with UID 123, you can:
+So to get the user name with UID 123, you can:
 
 ```raku
 my $uname = ~$*PWDENT[123]; # Or $*PWDENT[123].Str
+```
+
+Or to get the UID of a user named *auser* all you need to do is:
+
+```raku
+my $uid = +$*PWDENT<auser>; # Or $*PWDENT<auser>.Numeric
 ```
 
 Even you can coerce the `PwdEnt` object to `IO` to get the value of `dir` as an `IO::Path`.
@@ -90,7 +85,6 @@ names available in the system you can:
 ```raku
 my @users is List = (~$_ for $*PWDENT);
 ```
-
 
 ### The $*GRPENT dynamic variable
 
@@ -108,19 +102,19 @@ with the following methods to access the corresponding fields of the entry:
 - **gid**       Int
 - **members**   List of Str
 
-Similar to how Raku´s allomorphs works, evaluating the object in `Str` context returns the
+Similar to how Raku´s allomorphs works, evaluating a `GrpEnt` object in `Str` context returns the
 value of `.name` and in `Numeric` context the value of `.gid`.
 
-So, to get the GID of a group named *agroup* all you need to do is:
-
-```raku
-my $gid = +$*GRPENT<auser>; # Or $*GRPENT<auser>.Numeric
-```
-
-Or to get the group name with GID 123, you can:
+So, to get the group name with GID 123, you can:
 
 ```raku
 my $uname = ~$*GRPENT[123]; # Or $*GRPENT[123].Str
+```
+
+Or to get the GID of a group named *agroup* all you need to do is:
+
+```raku
+my $gid = +$*GRPENT<auser>; # Or $*GRPENT<auser>.Numeric
 ```
 
 The `$*GRPENT` variable can also be used as an `Iterable`, so to get a list of all group
@@ -132,7 +126,7 @@ my @group is List = (~$_ for $*GRPENT);
 
 ### Non existing entries
 
-Requesting an inexistent entry in any of $*PWDENT or $*GRPENT returns Nil.
+Requesting an inexistent entry from any of `$*PWDENT` or `$*GRPENT` returns `Nil`.
 So, you can use `with`
 
 ```raku
