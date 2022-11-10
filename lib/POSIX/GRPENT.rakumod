@@ -1,27 +1,51 @@
 use v6;
 use NativeCall;
 
-class GrpEnt:ver<0.0.1>:auth<zef:sortiz> is repr('CStruct') { ... }
-sub getgrnam(Str:D $name --> GrpEnt) is native { * };
-sub getgrgid(int32 $uid --> GrpEnt) is native { * };
-sub getgrent(--> GrpEnt) is native(Str) { * };
-sub setgrent() is native { * };
-sub endgrent() is native { * };
+class GrpEnt:ver<0.0.2>:auth<zef:sortiz> { ... }
+
+my class GrStruct is repr<CStruct> {
+    has Str         $!name;
+    has Str         $!passwd;
+    has uint32      $!gid;
+    has CArray[Str] $!_mem;
+
+    method members(::?CLASS:D:) {
+	my $c = 0;
+	do while $!_mem[$c] {
+	    $!_mem[$c++]
+	}
+    }
+    method Map(::?CLASS:D:) {
+	Map.new: |(:$!name:$!passwd:$!gid :members(self.members));
+    }
+}
+
+# actual NativeCall interfaces
+sub _getgrnam(Str --> GrStruct) is native is symbol<getgrnam> {*}
+sub _getgrgid(uint32 $gid --> GrStruct) is native is symbol<getgrgid> {*}
+sub _getgrent(--> GrStruct) is native is symbol<getgrent> {*}
+sub _setgrent() is native is symbol<setgrent> {*}
+sub _endgrent() is native is symbol<endgrent> {*}
+
 class GrpEnt {
-    has Str	$.name is readonly;
-    has Str	$.passwd is readonly;
-    has uint32	$.gid is readonly;
-    has Pointer	$._mem is readonly;
+    has Str	    $.name;
+    has Str	    $.passwd;
+    has Int	    $.gid:
+    has Str	    @.members;
     method byname(GrpEnt:U: Str:D $name --> GrpEnt) {
-	getgrnam($name);
+	with _getgrnam($name) {
+	    self.bless: |$_.Map
+	} else { Nil }
     }
     method byuid(GrpEnt:U: Int:D $uid --> GrpEnt) {
-	getgrgid($uid);
+	with _getgrgid($uid) {
+	    self.bless: |$_.Map
+	} else { Nil }
     }
     method Str(GrpEnt:D: --> Str) { $.name }
     method Numeric(GrpEnt:D: --> Int) { $.gid }
     method List(GrpEnt:D: --> List) {
-	(for <name passwd gid> {
+	(for <name passwd gid members> {
 	    $_ => self."$_"();
 	});
     }
@@ -29,7 +53,7 @@ class GrpEnt {
     method Hash(GrpEnt:D: --> Hash) { % = |self.List }
 }
 
-class POSIX::GrpEntAcc:ver<0.0.1>:auth<zef:sortiz>
+class POSIX::GrpEntAcc:ver<0.0.2>:auth<zef:sortiz>
 does Iterable does Positional does Associative {
     method of() { GrpEnt }
     multi method AT-POS(Int:D $uid) {
@@ -50,39 +74,18 @@ does Iterable does Positional does Associative {
     method iterator {
 	class :: does Iterator {
 	    method new() {
-		setgrent();
+		_setgrent();
 		self.bless();
 	    }
 	    method sink-all {
-		endgrent();
+		_endgrent();
 		IterationEnd;
 	    }
 	    method pull-one {
-		with getgrent() {
-		    $_;
+		with _getgrent() {
+		    GrpEnt.new: |$_.Map;
 		} else {
-		    endgrent();
-		    IterationEnd;
-		}
-	    }
-	}.new();
-    }
-    method vI {
-	class :: does Iterable does Iterator {
-	    method iterator { self }
-	    method new() {
-		setgrent();
-		self.bless();
-	    }
-	    method sink-all {
-		endgrent();
-		IterationEnd;
-	    }
-	    method pull-one {
-		with getgrent() {
-		    $_.Map;
-		} else {
-		    endgrent();
+		    _endgrent();
 		    IterationEnd;
 		}
 	    }
@@ -92,7 +95,4 @@ does Iterable does Positional does Associative {
 
 Rakudo::Internals.REGISTER-DYNAMIC: '$*GRPENT', {
     PROCESS::<$GRPENT> := POSIX::GrpEntAcc.new;
-}
-Rakudo::Internals.REGISTER-DYNAMIC: '@*GRPENT', {
-    PROCESS::<@GRPENT> := POSIX::GrpEntAcc.new.vI;
 }
