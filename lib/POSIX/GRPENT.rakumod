@@ -94,5 +94,5 @@ does Iterable does Positional does Associative {
 }
 
 Rakudo::Internals.REGISTER-DYNAMIC: '$*GRPENT', {
-    PROCESS::<$GRPENT> := POSIX::GrpEntAcc.new;
-}
+    PROCESS::<$GRPENT> := POSIX::GrpEntAcc.new
+} unless PROCESS::<$GRPENT>;

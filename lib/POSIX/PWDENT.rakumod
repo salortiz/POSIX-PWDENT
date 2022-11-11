@@ -147,5 +147,5 @@ does Iterable does Positional does Associative {
 }
 
 Rakudo::Internals.REGISTER-DYNAMIC: '$*PWDENT', {
-    PROCESS::<$PWDENT> := POSIX::PwdEntAcc.new;
-}
+    PROCESS::<$PWDENT> := POSIX::PwdEntAcc.new
+} unless PROCESS::<$PWDENT>;
