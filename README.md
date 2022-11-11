@@ -41,8 +41,8 @@ say ~$*GRPENT[0];
 ## Reference
 ### The $*PWDENT dynamic variable
 
-When you request the POSIX::PWDENT module to be loaded, the `$*PWDENT` dynamic variable
-is installed.
+When you request the POSIX::PWDENT module to be loaded the `$*PWDENT` dynamic variable
+is installed and is available anywhere in your code.
 
 To get an entry by *name* use the variable as an `Associative` and to get an entry by *UID*
 use the variable as a `Positional`.

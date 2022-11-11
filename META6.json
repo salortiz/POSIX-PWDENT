@@ -3,7 +3,7 @@
     "name" : "POSIX::PWDENT",
     "version" : "0.0.2",
     "auth" : "zef:sortiz",
-    "description" : "Access to POSIX password DB via $*PWDENT dynvar",
+    "description" : "Access to POSIX passwd and group DBs via dynamic vars",
     "depends" : [ ],
     "build-depends" : [ ],
     "test-depends" : [ ],
@@ -22,6 +22,6 @@
        "source" : "https://github.com/salortiz/POSIX-PWDENT.git"
     },
     "tags" : [
-       "passwd", "pwddb", "getpwent", "getpwname", "getpwuid"
+       "passwd", "group", "getpwent", "getpwnam", "getpwuid", "getgrent"
     ]
 }
